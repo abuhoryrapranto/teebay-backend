@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\V1\AuthController;
 use App\Http\Controllers\V1\ProductController;
+use App\Http\Controllers\V1\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,6 +37,24 @@ Route::group([
         Route::post('/login', [AuthController::class, 'login']);
     });
 
-    Route::put('/product/increment-views/{slug}', [ProductController::class, 'insertProductView']);
-    Route::resource('product', ProductController::class);
+    Route::group([
+
+        'middleware' => 'auth:sanctum'
+
+    ], function () {
+
+        Route::put('/product/increment-views/{slug}', [ProductController::class, 'insertProductView']);
+        Route::resource('product', ProductController::class);
+
+        Route::group([
+
+            'prefix' => 'order'
+    
+        ], function () {
+    
+            Route::post('/', [OrderController::class, 'orderProduct']);
+            Route::get('/{type}', [OrderController::class, 'getOrderProducts']);
+        });
+    });
+
 });

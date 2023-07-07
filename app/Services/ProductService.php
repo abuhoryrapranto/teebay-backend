@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-class ProductService {
+class ProductService extends BaseService {
     
     public function getAllProducts($data) {
 
@@ -25,19 +25,5 @@ class ProductService {
             'rent_option' => $data->rent_option,
             'views' => $data->views ? $data->views : 0
         ];
-    }
-
-    private function formatCategory($data) {
-
-        $category = [];
-
-        foreach($data as $row) {
-
-            $temp =  $row->category->name;
-
-            array_push($category, $temp);
-        }
-
-        return implode(',', $category);
     }
 }
