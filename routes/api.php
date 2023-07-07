@@ -36,5 +36,6 @@ Route::group([
         Route::post('/login', [AuthController::class, 'login']);
     });
 
+    Route::put('/product/increment-views/{slug}', [ProductController::class, 'insertProductView']);
     Route::resource('product', ProductController::class);
 });

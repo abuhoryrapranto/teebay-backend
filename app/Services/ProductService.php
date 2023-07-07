@@ -22,7 +22,8 @@ class ProductService {
             'description' => $data->description,
             'purchase_price' => $data->purchase_price,
             'rent_price' => $data->rent_price,
-            'rent_option' => $data->rent_option
+            'rent_option' => $data->rent_option,
+            'views' => $data->views ? $data->views : 0
         ];
     }
 

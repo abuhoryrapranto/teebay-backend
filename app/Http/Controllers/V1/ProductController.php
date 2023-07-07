@@ -169,14 +169,14 @@ class ProductController extends Controller
      */
     public function destroy(string $slug)
     {
-        $exit = Product::where('slug', $slug)->first();
+        $exit = Product::where('slug', $slug)->where('status', 1)->first();
 
         if(!$exit) return $this->getResponse(404, 'Product not found!');
 
         try {
 
             $exit->delete();
-            ProductCategory::where('product_id', $exit->id)->delete();
+            ProductCategory::where('product_id', $exit->id)->where('status', 1)->delete();
 
             return $this->getResponse(200, 'Product deleted successfully.');
 
@@ -185,5 +185,14 @@ class ProductController extends Controller
             return $this->getResponse(500, 'Something went wrong');
         }
 
+    }
+
+    public function insertProductView(string $slug) {
+        
+        $product = Product::where('slug', $slug)->where('status', 1)->first();
+        $product->views = $product->views+1;
+        
+        if(!$product->save()) return $this->getResponse(500, 'Something went wrong');
+        return $this->getResponse(200, 'Product view increment successfully.');
     }
 }
