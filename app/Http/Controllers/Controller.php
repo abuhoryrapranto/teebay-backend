@@ -10,7 +10,8 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
 
-    protected function getResponse($code, $message=null, $data=null) {
+    protected function getResponse($code, $message=null, $data=null) 
+    {
         return response()->json([
             'response_code' => (int)$code,
             'message' => (string)$message,
