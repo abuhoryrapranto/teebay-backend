@@ -27,7 +27,7 @@ class UserRegistrationRequest extends FormRequest
             'last_name' => 'required|string|max:255',
             'address' => 'required|string',
             'email' => 'required|string|email|unique:users,email',
-            'phone' => ['required', 'string', 'regex:/^(\+88|88)?01(?:(?!2)[1-9])\d{8}$/'],
+            'phone' => ['required', 'string', 'unique:users,phone', 'regex:/^(\+88|88)?01(?:(?!2)[1-9])\d{8}$/'],
             'password' => ['required', 'confirmed', Password::min(6)->letters()
                                                                     ->mixedCase()
                                                                     ->numbers()

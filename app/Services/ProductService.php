@@ -23,7 +23,8 @@ class ProductService extends BaseService {
             'purchase_price' => $data->purchase_price,
             'rent_price' => $data->rent_price,
             'rent_option' => $data->rent_option,
-            'views' => $data->views ? $data->views : 0
+            'views' => $data->views ? $data->views : 0,
+            'posted_date' => $data->created_at->format('jS F Y')
         ];
     }
 }
