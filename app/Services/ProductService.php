@@ -20,8 +20,8 @@ class ProductService extends BaseService {
             'slug' => $data->slug,
             'category' => $this->formatCategory($data->productCategory),
             'description' => $data->description,
-            'purchase_price' => $data->purchase_price,
-            'rent_price' => $data->rent_price,
+            'purchase_price' => number_format($data->purchase_price, 2),
+            'rent_price' => number_format($data->rent_price, 2),
             'rent_option' => $data->rent_option,
             'views' => $data->views ? $data->views : 0,
             'posted_date' => $data->created_at->format('jS F Y')
