@@ -43,6 +43,7 @@ Route::group([
 
     ], function () {
 
+        Route::get('/product/categories', [ProductController::class, 'getAllCategories']);
         Route::put('/product/increment-views/{slug}', [ProductController::class, 'insertProductView']);
         Route::resource('product', ProductController::class);
 

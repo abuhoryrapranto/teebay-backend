@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Requests\ProductCreateRequest;
 use App\Http\Requests\ProductEditRequest;
 use App\Models\Product;
+use App\Models\Category;
 use App\Models\ProductCategory;
 use App\Services\ProductService;
 
@@ -133,27 +134,30 @@ class ProductController extends Controller
 
             $categories = $request->filled('category_ids') ? $request->category_ids : '';
             
-            $product_category = [];
+            if(count($categories) > 0) {
 
-            ProductCategory::where('product_id', $product->id)->delete($product_category);
+                $product_category = [];
 
-            foreach($categories as $row) {
+                ProductCategory::where('product_id', $product->id)->delete($product_category);
 
-                $temp = [
-                    'product_id' => $product->id,
-                    'category_id' => $row,
-                    'created_at' => date("Y-m-d h:i:s"),
-                    'updated_at' => date("Y-m-d h:i:s")
-                ];
+                foreach($categories as $row) {
 
-                array_push($product_category, $temp);
+                    $temp = [
+                        'product_id' => $product->id,
+                        'category_id' => $row,
+                        'created_at' => date("Y-m-d h:i:s"),
+                        'updated_at' => date("Y-m-d h:i:s")
+                    ];
+
+                    array_push($product_category, $temp);
+                }
+
+                ProductCategory::insert($product_category);
             }
-
-            ProductCategory::insert($product_category);
 
             DB::commit();
 
-            return $this->getResponse(201, 'Product updated successfully.', $product);
+            return $this->getResponse(200, 'Product updated successfully.', $product);
 
         } catch(\Exception $e) {
 
@@ -194,5 +198,15 @@ class ProductController extends Controller
         
         if(!$product->save()) return $this->getResponse(500, 'Something went wrong');
         return $this->getResponse(200, 'Product view increment successfully.');
+    }
+
+    public function getAllCategories() {
+
+        $categories = Category::where('status', 1)->get();
+
+        if($categories->isEmpty()) 
+            return $this->getResponse(404, 'Categories not found.');
+        return $this->getResponse(200, "Total {$categories->count()} categories found.", $categories);
+
     }
 }
