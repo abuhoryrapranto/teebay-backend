@@ -49,7 +49,12 @@ class OrderController extends Controller
 
         if($type !== 'buy' && $type !== 'rent') return $this->getResponse(400, 'Invalid order type.');
 
-        $orders = Order::with('product.productCategory.category')->where('type', $type)->where('status', 1)->get();
+        $orders = Order::with('product.productCategory.category')
+                        ->where('type', $type)
+                        ->where('user_id', Auth::user()->id)
+                        ->where('status', 1)
+                        ->orderByDesc('created_at')
+                        ->get();
 
         if($orders->isEmpty())
             return $this->getResponse(404, "No orders found!");

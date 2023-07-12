@@ -32,7 +32,9 @@ class OrderService extends BaseService {
                 'category' => $this->formatCategory($data->product->productCategory),
                 'description' => $data->product->description,
                 'rent_price' => $data->product->rent_price,
-                'rent_option' => $data->product->rent_option
+                'rent_option' => $data->product->rent_option,
+                'rent_from' => $data->rent_from,
+                'rent_to' => $data->rent_to
             ];
         }
 
