@@ -5,6 +5,8 @@ namespace App\Http\Controllers\V1;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
 
 use App\Http\Requests\ProductCreateRequest;
 use App\Http\Requests\ProductEditRequest;
@@ -26,6 +28,10 @@ class ProductController extends Controller
      */
     public function index()
     {
+        //If you want to cache data in redis, please make configure redis and uncomment the below line code.
+        //return $this->getAllProductsWithCache();
+
+        
         $products = Product::with('productCategory.category')->where('status', 1)->get();
 
         if($products->isEmpty())
@@ -208,5 +214,24 @@ class ProductController extends Controller
             return $this->getResponse(404, 'Categories not found.');
         return $this->getResponse(200, "Total {$categories->count()} categories found.", $categories);
 
+    }
+
+    public function getAllProductsWithCache() {
+        try {
+            
+            if(Redis::connection()->ping()) {
+                if(Cache::store('redis')->has('teebay_products')) {
+                    $products = Cache::store('redis')->get('teebay_products');
+                    return $this->getResponse(200, "Total {$products->count()} products found.", $this->productService->getAllProducts($products));
+                } else {
+                    $products = Product::with('productCategory.category')->where('status', 1)->get();
+                    Cache::store('redis')->put('teebay_products', $products, $seconds = 10);
+                    return $this->getResponse(200, "Total {$products->count()} products found.", $this->productService->getAllProducts($products));
+                }
+            }
+            
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
     }
 }
