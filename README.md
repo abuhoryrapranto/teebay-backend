@@ -5,6 +5,7 @@ It is a backend app. I used Laravel as a backend framework, PostgreSQL as a Data
 ### Installation Processes
 
 - Rn git clone this repository
+- cd [repository name]
 - Run composer install
 - Run cp .env.example .env
 - Run php artisan key:generate
