@@ -1,6 +1,6 @@
-## About Laravel
+## Teebay
 
-It is a backend app for Teebay. I used Laravel as a backend framework, PostgreSQL as a Database, Fortify for email verification, Sanctum for Api Authentication, Predis as Redis Driver.
+It is a backend app. I used Laravel as a backend framework, PostgreSQL as a Database, Fortify for email verification, Sanctum for Api Authentication, Predis as Redis Driver.
 
 ### Installation Processes
 
