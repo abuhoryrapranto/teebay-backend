@@ -145,7 +145,7 @@ class ProductController extends Controller
 
                 $product_category = [];
 
-                ProductCategory::where('product_id', $product->id)->delete($product_category);
+                ProductCategory::where('product_id', $product->id)->forceDelete($product_category);
 
                 foreach($categories as $row) {
 
