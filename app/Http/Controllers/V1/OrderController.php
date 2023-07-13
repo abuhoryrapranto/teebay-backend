@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Product;
 use App\Models\Order;
 use App\Services\OrderService;
+use App\Jobs\EmailJob;
 
 class OrderController extends Controller
 {
@@ -27,8 +28,7 @@ class OrderController extends Controller
             'rent_to' => 'required_if:type,rent|date'
         ]);
 
-        $product = Product::select('id')
-                            ->where('slug', $request->slug)
+        $product = Product::where('slug', $request->slug)
                             ->where('status', 1)
                             ->first();
         
@@ -40,6 +40,19 @@ class OrderController extends Controller
         $order->type = $request->type;
         $order->rent_from = $request->rent_from ? $request->rent_from : null;
         $order->rent_to = $request->rent_to ? $request->rent_to: null;
+
+        $jobData = [
+            'email' => Auth::user()->email,
+            'title' => $product->title,
+            'type' => $request->type,
+            'purchase_price' => $product->purchase_price,
+            'rent_price' => $product->rent_price,
+            'rent_option' => $product->rent_option,
+            'rent_from' => $request->rent_from ? $request->rent_from : null,
+            'rent_to' => $request->rent_to ? $request->rent_to: null
+        ];
+
+        EmailJob::dispatch($jobData);
 
         if(!$order->save()) return $this->getResponse(500, 'Something went wrong');
         return $this->getResponse(201, "Product {$request->type} successfully.");

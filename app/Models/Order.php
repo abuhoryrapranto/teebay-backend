@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\belongsTo;
 
 class Order extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     public function product(): belongsTo
     {

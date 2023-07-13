@@ -12,6 +12,7 @@ use App\Http\Requests\ProductCreateRequest;
 use App\Http\Requests\ProductEditRequest;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Order;
 use App\Models\ProductCategory;
 use App\Services\ProductService;
 
@@ -185,8 +186,19 @@ class ProductController extends Controller
 
         try {
 
+            $order = Order::where('product_id', $exit->id)->first();
+
+            if($order) 
+                $order->delete();
+            
+            $productCategory = ProductCategory::where('product_id', $exit->id)->where('status', 1)->first();
+
+            if($productCategory) 
+                $productCategory->delete();
+            
+            
+
             $exit->delete();
-            ProductCategory::where('product_id', $exit->id)->where('status', 1)->delete();
 
             return $this->getResponse(200, 'Product deleted successfully.');
 
