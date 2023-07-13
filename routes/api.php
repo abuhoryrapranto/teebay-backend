@@ -64,6 +64,3 @@ Route::group([
     });
 
 });
-
-
-Route::get('/email-test', [OrderController::class, 'mailTest']);
