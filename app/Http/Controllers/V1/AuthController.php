@@ -50,38 +50,30 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        if($user->hasVerifiedEmail()) {
+        if(!$user) return $this->getResponse(404, 'User not found!');
 
-        //we don't need to check if user exist or not. Because we check it in validation time.
+        if(!$user->hasVerifiedEmail()) return $this->getResponse(400, 'Email is not verified yet!');
 
-            if($user->status == 1) {
+        if($user->status != 1) $this->getResponse(400, 'User is not activated yet!');
 
-                $check_password = Hash::check($request->password, $user->password);
+        $check_password = Hash::check($request->password, $user->password);
 
-                if($check_password) {
+        if(!$check_password) $this->getResponse(400, 'Password does not match!');
 
-                    $token = $user->createToken('user-token');
+        $token = $user->createToken('user-token');
 
-                    if($token) {
+        if($token) {
 
-                        $response = [
-                            'user' => $user,
-                            'token' => $token->plainTextToken
-                        ];
+            $response = [
+                'user' => $user,
+                'token' => $token->plainTextToken
+            ];
 
-                        return $this->getResponse(200, 'Successfully logged in.', $response);
+            return $this->getResponse(200, 'Successfully logged in.', $response);
 
-                    } else {
+        } else {
 
-                        return $this->getResponse(500, 'Something went wrong.');
-                    }
-                }
-
-                return $this->getResponse(400, "Password doesn't match.");
-            }
-
-            return $this->getResponse(400, 'User is deactivated.');
+            return $this->getResponse(500, 'Something went wrong.');
         }
-        return $this->getResponse(400, 'Email is not verified.');
     }
 }
